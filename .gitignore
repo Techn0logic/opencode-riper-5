@@ -1,0 +1,5 @@
+.opencode/memory-bank/
+.opencode/plans/
+package.json
+node_modules/
+*.lock

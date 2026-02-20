@@ -1,0 +1,108 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "opencode": {
+      "options": {}
+    }
+  },
+  "agent": {
+    "research-innovate": {
+      "description": "Research and innovation phase - information gathering and brainstorming",
+      "mode": "subagent",
+      "model": "opencode/gpt-5-nano",
+      "temperature": 0.7,
+      "permission": {
+        "read": "allow",
+        "write": "deny",
+        "edit": "deny",
+        "bash": {
+          "git log*": "allow",
+          "git diff*": "allow",
+          "git status*": "allow",
+          "git branch*": "allow",
+          "*": "deny"
+        }
+      }
+    },
+    "plan-execute": {
+      "description": "Planning and execution phase - specifications and implementation",
+      "mode": "subagent",
+      "model": "opencode/glm-5-free",
+      "temperature": 0.2,
+      "permission": {
+        "read": "allow",
+        "write": "allow",
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "review": {
+      "description": "Validation and quality assurance - ruthlessly verify implementation against plan",
+      "mode": "subagent",
+      "model": "opencode/minimax-m2.5-free",
+      "temperature": 0.1,
+      "permission": {
+        "read": "allow",
+        "write": "ask",
+        "edit": "deny",
+        "bash": {
+          "pnpm test*": "allow",
+          "pnpm lint*": "allow",
+          "pnpm type-check*": "allow",
+          "git diff*": "allow",
+          "git log*": "allow",
+          "*": "deny"
+        }
+      }
+    }
+  },
+  "command": {
+    "riper:strict": {
+      "template": "{file:./commands/riper/strict.md}",
+      "description": "Enable strict RIPER protocol enforcement"
+    },
+    "riper:research": {
+      "template": "{file:./commands/riper/research.md}",
+      "description": "Enter RESEARCH mode for information gathering",
+      "agent": "research-innovate"
+    },
+    "riper:innovate": {
+      "template": "{file:./commands/riper/innovate.md}",
+      "description": "Enter INNOVATE mode for brainstorming",
+      "agent": "research-innovate"
+    },
+    "riper:plan": {
+      "template": "{file:./commands/riper/plan.md}",
+      "description": "Enter PLAN mode for technical specifications",
+      "agent": "plan-execute"
+    },
+    "riper:execute": {
+      "template": "{file:./commands/riper/execute.md}",
+      "description": "Enter EXECUTE mode to implement approved plan",
+      "agent": "plan-execute"
+    },
+    "riper:review": {
+      "template": "{file:./commands/riper/review.md}",
+      "description": "Enter REVIEW mode for validation",
+      "agent": "review"
+    },
+    "riper:workflow": {
+      "template": "{file:./commands/riper/workflow.md}",
+      "description": "Execute full RIPER workflow"
+    },
+    "memory:save": {
+      "template": "{file:./commands/memory/save.md}",
+      "description": "Save context to memory bank"
+    },
+    "memory:recall": {
+      "template": "{file:./commands/memory/recall.md}",
+      "description": "Retrieve from memory bank"
+    },
+    "memory:list": {
+      "template": "{file:./commands/memory/list.md}",
+      "description": "List all memories"
+    }
+  },
+  "mcp": {},
+  "tools": {}
+}
